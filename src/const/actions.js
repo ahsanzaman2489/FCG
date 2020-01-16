@@ -1,0 +1,1 @@
+export const FETCH_CAR_DETAILS = "FETCH_CAR_DETAILS";

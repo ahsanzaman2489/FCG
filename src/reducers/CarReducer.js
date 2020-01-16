@@ -1,9 +1,9 @@
 export default (state = {}, action) => {
   switch (action.type) {
-    case "SIMPLE_ACTION":
+    case "FETCH_CAR_DETAILS":
       return {
         ...state,
-        result: action.payload
+        ...action.payload
       };
     default:
       return state;
