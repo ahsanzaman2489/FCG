@@ -2,13 +2,22 @@ import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import { Container, Grid, Typography, makeStyles } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  Typography,
+  makeStyles,
+  CircularProgress
+} from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
-import * as actionCreators from "../../actions";
+import * as CarDetailActions from "../../actions/CarActions";
+import * as CarTasksActions from "../../actions/CarTasksActions";
 import CardComponent from "../../components/Card";
 import CarStatus from "../../components/CarStatus";
 import CarFinancialInfo from "../../components/CarFinancialInfo";
+import CarTasks from "../../components/CarTasks";
 import CarImage from "../../images/altroz.jpg";
 
 const useStyles = makeStyles({
@@ -28,54 +37,70 @@ const useStyles = makeStyles({
   },
   thumbnail: {
     maxWidth: "100%"
+  },
+  spinnerGrid: {
+    justifyContent: "center",
+    minHeight: 400,
+    alignItems: "center"
   }
 });
 
-const CarDetail = ({ actions, carDetails, match }) => {
+const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
   const classes = useStyles();
-  // console.log(carDetails);
-
+  console.log(carDetails);
+  const { fetchCarDetails, fetchCarTasks, addTask, updateTask } = actions;
   const {
     make,
     model,
     physicalStatus,
     legalStatus,
     sellingStatus,
-    financialDetails
+    financialDetails,
+    id
   } = carDetails;
 
-  useEffect(() => {
-    const { fetchCarDetails } = actions;
-    fetchCarDetails(match.params.id);
-  }, [actions, match.params.id]);
+  const spinnerGrid = (
+    <Grid container item xs={12} spacing={3} className={classes.spinnerGrid}>
+      <CircularProgress />
+    </Grid>
+  );
 
-  // console.log(carDetails);
+  useEffect(() => {
+    fetchCarDetails(match.params.id);
+    fetchCarTasks(match.params.id);
+  }, [actions, fetchCarDetails, fetchCarTasks, match.params.id]);
+
   return (
     <Container fixed>
       <Grid container className={classes.grid} spacing={3}>
-        <h1>
-          {make} {model}
-        </h1>
-        <Grid container item xs={12} spacing={3}>
-          <Grid item xs={5}>
-            <CardComponent>
-              <img className={classes.thumbnail} src={CarImage} alt="Car" />
-            </CardComponent>
-          </Grid>
-          <Grid item xs={3}>
-            <CarStatus
-              physicalStatus={physicalStatus}
-              legalStatus={legalStatus}
-              sellingStatus={sellingStatus}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            {financialDetails && (
-              <CarFinancialInfo financialDetails={financialDetails} />
-            )}
-          </Grid>
-        </Grid>
-
+        {carDetails.loading ? (
+          spinnerGrid
+        ) : (
+          <>
+            <h1>
+              {make} {model}
+            </h1>
+            <Grid container item xs={12} spacing={3}>
+              <Grid item xs={5}>
+                <CardComponent>
+                  <img className={classes.thumbnail} src={CarImage} alt="Car" />
+                </CardComponent>
+              </Grid>
+              <Grid item xs={3}>
+                <CarStatus
+                  physicalStatus={physicalStatus}
+                  legalStatus={legalStatus}
+                  sellingStatus={sellingStatus}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                {financialDetails && (
+                  <CarFinancialInfo financialDetails={financialDetails} />
+                )}
+              </Grid>
+            </Grid>
+          </>
+        )}
         <Grid item xs={6}>
           <CardComponent>
             <Typography
@@ -92,16 +117,13 @@ const CarDetail = ({ actions, carDetails, match }) => {
         </Grid>
         <Grid item xs={6}>
           <CardComponent>
-            <Typography
-              className={classes.title}
-              color="textSecondary"
-              gutterBottom
-            >
-              Word of the Day
-            </Typography>
-            <Typography className={classes.pos} color="textSecondary">
-              adjective
-            </Typography>
+            <CarTasks
+              carId={id}
+              addTaskAction={addTask}
+              updateTaskAction={updateTask}
+              taskDetails={taskDetails}
+              spinner={spinnerGrid}
+            />
           </CardComponent>
         </Grid>
       </Grid>
@@ -116,10 +138,16 @@ CarDetail.propTypes = {
   match: PropTypes.instanceOf(Object).isRequired
 };
 
-const mapStateToProps = state => ({ carDetails: state.CarReducer });
+const mapStateToProps = state => ({
+  carDetails: state.CarReducer,
+  taskDetails: state.TaskReducer
+});
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(actionCreators, dispatch)
+  actions: bindActionCreators(
+    { ...CarDetailActions, ...CarTasksActions },
+    dispatch
+  )
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CarDetail);

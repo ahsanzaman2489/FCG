@@ -4,12 +4,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: "100%"
+    minWidth: "100%",
+    marginLeft: 0
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
@@ -41,11 +43,12 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
     });
   };
 
-  // console.log(selectedIndex)
-  // console.log(selected , options)
-
   return (
-    <FormControl className={classes.formControl} variant="outlined">
+    <FormControl
+      className={classes.formControl}
+      variant="outlined"
+      error={!!(meta.touched && meta.error)}
+    >
       <InputLabel
         ref={inputLabel}
         id="demo-simple-select-outlined-label"
@@ -56,13 +59,12 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
       <Select
         labelId="demo-simple-select-outlined-label"
         {...input}
-        autoWidth
         value={selectedIndex}
       >
         {renderOptions(options)}
       </Select>
       {meta.touched && meta.error && (
-        <span className="text-danger">{meta.error}</span>
+        <FormHelperText>{meta.error}</FormHelperText>
       )}
     </FormControl>
   );
@@ -71,12 +73,13 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
 SelectComponent.propTypes = {
   input: PropTypes.instanceOf(Object).isRequired,
   meta: PropTypes.instanceOf(Object).isRequired,
-  options: PropTypes.arrayOf(Object).isRequired,
+  options: PropTypes.arrayOf(Object),
   label: PropTypes.string.isRequired,
   selected: PropTypes.string
 };
 SelectComponent.defaultProps = {
-  selected: null
+  selected: null,
+  options: []
 };
 
 export default SelectComponent;
