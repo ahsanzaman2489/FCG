@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import * as actionCreators from "../../actions";
 import CardComponent from "../../components/Card";
 import CarStatus from "../../components/CarStatus";
+import CarFinancialInfo from "../../components/CarFinancialInfo";
 import CarImage from "../../images/altroz.jpg";
 
 const useStyles = makeStyles({
@@ -34,16 +35,27 @@ const CarDetail = ({ actions, carDetails, match }) => {
   const classes = useStyles();
   // console.log(carDetails);
 
-  const { physicalStatus, legalStatus, sellingStatus } = carDetails;
+  const {
+    make,
+    model,
+    physicalStatus,
+    legalStatus,
+    sellingStatus,
+    financialDetails
+  } = carDetails;
 
   useEffect(() => {
     const { fetchCarDetails } = actions;
     fetchCarDetails(match.params.id);
   }, [actions, match.params.id]);
 
+  // console.log(carDetails);
   return (
     <Container fixed>
       <Grid container className={classes.grid} spacing={3}>
+        <h1>
+          {make} {model}
+        </h1>
         <Grid container item xs={12} spacing={3}>
           <Grid item xs={5}>
             <CardComponent>
@@ -58,7 +70,9 @@ const CarDetail = ({ actions, carDetails, match }) => {
             />
           </Grid>
           <Grid item xs={4}>
-            a
+            {financialDetails && (
+              <CarFinancialInfo financialDetails={financialDetails} />
+            )}
           </Grid>
         </Grid>
 

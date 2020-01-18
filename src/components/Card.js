@@ -9,6 +9,7 @@ const CardComponent = ({ children }) => {
     </Card>
   );
 };
+
 CardComponent.propTypes = {
   children: PropTypes.node.isRequired
 };

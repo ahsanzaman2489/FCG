@@ -23,6 +23,8 @@ const useStyles = makeStyles(theme => ({
 const SelectComponent = ({ input, meta, options, label, selected }) => {
   // console.log(input, meta, options)
   // eslint-disable jsx-props-no-spreading
+  const inputLabel = useRef(null);
+  const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = useState("");
 
   useEffect(() => {
@@ -38,8 +40,6 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
       );
     });
   };
-  const inputLabel = useRef(null);
-  const classes = useStyles();
 
   // console.log(selectedIndex)
   // console.log(selected , options)
