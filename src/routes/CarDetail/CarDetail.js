@@ -49,7 +49,7 @@ const useStyles = makeStyles({
 const CarDetail = ({actions, carDetails, taskDetails, match}) => {
     const classes = useStyles();
     console.log(carDetails);
-    const {fetchCarDetails, updateCar, fetchCarTasks, addTask, updateTask} = actions;
+    const {fetchCarDetails, updateCar, fetchCarTasks, addTask, updateTask, fetchMake} = actions;
     const {
         make,
         model,
@@ -84,7 +84,7 @@ const CarDetail = ({actions, carDetails, taskDetails, match}) => {
                         <Grid container item xs={12} spacing={3}>
                             <Grid item xs={5}>
                                 <CardComponent>
-                                    <img className={classes.thumbnail} src={CarImage} alt="Car"/>
+                                    {/*<img className={classes.thumbnail} src={CarImage} alt="Car"/>*/}
                                 </CardComponent>
                             </Grid>
                             <Grid item xs={3}>
@@ -106,7 +106,10 @@ const CarDetail = ({actions, carDetails, taskDetails, match}) => {
                 )}
                 <Grid item xs={6}>
                     <CardComponent>
-                        <CarInformation/>
+                        <CarInformation
+                            fetchMake={fetchMake}
+                            carDetails={carDetails}
+                        />
                     </CardComponent>
                 </Grid>
                 <Grid item xs={6}>

@@ -23,17 +23,6 @@ query($id:ID!){
   }
 }`;
 
-// updateCar(car: {
-//     id:"20664c0d-266e-4950-a70d-c0a63afd510b"
-//     legalStatus:null
-// }){
-//     id
-//     physicalStatus
-//     legalStatus
-//     financialDetails{purchasePrice}
-// }
-// }
-
 export const carUpdateMutation = `
 mutation($car:CarInput){
   updateCar(car:$car){
@@ -42,6 +31,12 @@ mutation($car:CarInput){
     sellingStatus
   }
 }`;
+
+export const makeQuery = `
+query{
+  make
+}`;
+
 
 export const carTaskQuery = `
 query($id:ID!){

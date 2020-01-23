@@ -1,9 +1,13 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Field, reduxForm} from "redux-form";
 import PropTypes from "prop-types";
 import Select from "./formFields/Select";
+import {bindActionCreators} from "redux";
+import * as CarDetailActions from "../actions/CarActions";
+import * as CarTasksActions from "../actions/CarTasksActions";
+import {connect} from "react-redux";
 
-const CarInfo = ({id, make = [], model = [], trim = [], carDetails}) => {
+const CarInfo = ({}) => {
 
 
     const statusChangeHandler = (e) => {
@@ -13,6 +17,10 @@ const CarInfo = ({id, make = [], model = [], trim = [], carDetails}) => {
         const value = e.target.value;
 
     };
+
+    useEffect(()=>{
+        fetchMake()
+    },[]);
 
     return (
         <form>
@@ -47,18 +55,30 @@ const CarInfo = ({id, make = [], model = [], trim = [], carDetails}) => {
     );
 };
 
-CarInfo.propTypes = {
-    physicalStatus: PropTypes.string,
-    legalStatus: PropTypes.string,
-    sellingStatus: PropTypes.string
-};
-CarInfo.defaultProps = {
-    physicalStatus: null,
-    legalStatus: null,
-    sellingStatus: null
-};
+// CarInfo.propTypes = {
+//     physicalStatus: PropTypes.string,
+//     legalStatus: PropTypes.string,
+//     sellingStatus: PropTypes.string
+// };
+// CarInfo.defaultProps = {
+//     physicalStatus: null,
+//     legalStatus: null,
+//     sellingStatus: null
+// };
 
-export default reduxForm({
-    // a unique name for the form
+
+const mapStateToProps = state => ({
+    carDetails: state.CarReducer,
+    taskDetails: state.TaskReducer
+});
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(
+        {...CarDetailActions, ...CarTasksActions},
+        dispatch
+    )
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
     form: "info"
-})(CarInfo);
+})(CarInfo));
