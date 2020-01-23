@@ -43,7 +43,6 @@ const validate = values => {
 
 const CarTasks = ({
   taskDetails,
-  spinner,
   carId,
   handleSubmit,
   addTaskAction,
@@ -87,17 +86,13 @@ const CarTasks = ({
     <div className={classes.grid}>
       <h2>list of tasks</h2>
       <div className={classes.overFlow}>
-        {taskDetails.loading ? (
-          spinner
-        ) : (
-          <>
             <Tooltip title="Add" aria-label="add" onClick={handleOpen}>
               <Fab color="secondary" className={classes.absolute}>
                 <AddIcon />
               </Fab>
             </Tooltip>
-            {!tasks ? (
-              <h3>No task Available</h3>
+            {!tasks || tasks.length ===0 ? (
+              <h3>No tasks Available</h3>
             ) : (
               tasks.map(item => {
                 return (
@@ -113,8 +108,6 @@ const CarTasks = ({
                 );
               })
             )}
-          </>
-        )}
       </div>
 
       <Dialog
@@ -161,11 +154,14 @@ const CarTasks = ({
 
 CarTasks.propTypes = {
   taskDetails: PropTypes.instanceOf(Object).isRequired,
-  spinner: PropTypes.node.isRequired,
-  carId: PropTypes.string.isRequired,
+  carId: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   addTaskAction: PropTypes.func.isRequired,
   updateTaskAction: PropTypes.func.isRequired
+};
+
+CarTasks.defaultProps = {
+  carId:null
 };
 
 export default reduxForm({
