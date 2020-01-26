@@ -36,6 +36,19 @@ export const makeQuery = `
 query{
   make
 }`;
+export const modelQuery = `
+query($make:String!){
+  model(make: $make)
+}`;
+
+
+export const trimQuery = `
+query(
+$make:String!
+$model:String!
+){
+  trim(make: $make, model: $model)
+}`;
 
 
 export const carTaskQuery = `

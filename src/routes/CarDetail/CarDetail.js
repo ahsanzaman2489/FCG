@@ -84,7 +84,7 @@ const CarDetail = ({actions, carDetails, taskDetails, match}) => {
                         <Grid container item xs={12} spacing={3}>
                             <Grid item xs={5}>
                                 <CardComponent>
-                                    {/*<img className={classes.thumbnail} src={CarImage} alt="Car"/>*/}
+                                    <img className={classes.thumbnail} src={CarImage} alt="Car"/>
                                 </CardComponent>
                             </Grid>
                             <Grid item xs={3}>
@@ -105,12 +105,17 @@ const CarDetail = ({actions, carDetails, taskDetails, match}) => {
                     </>
                 )}
                 <Grid item xs={6}>
-                    <CardComponent>
-                        <CarInformation
-                            fetchMake={fetchMake}
-                            carDetails={carDetails}
-                        />
-                    </CardComponent>
+                    {carDetails.loading ? (
+                        spinnerGrid
+                    ) : (
+                        <CardComponent>
+                            <CarInformation
+                                fetchMake={fetchMake}
+                                carDetails={carDetails}
+                            />
+                        </CardComponent>
+                    )}
+
                 </Grid>
                 <Grid item xs={6}>
                     {taskDetails.loading ? (

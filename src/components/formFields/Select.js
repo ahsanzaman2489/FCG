@@ -34,12 +34,13 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
   }, [selected]);
 
   const renderOptions = selectOptions => {
+
     return selectOptions.map(item => {
-      return (
-        <MenuItem value={item.value} key={item.value}>
-          {item.label}
-        </MenuItem>
-      );
+      return typeof item === 'string' ? <MenuItem value={item} key={item}>
+        {item}
+      </MenuItem> : <MenuItem value={item.value} key={item.value}>
+        {item.label}
+      </MenuItem>
     });
   };
 
@@ -59,7 +60,7 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
       <Select
         labelId="demo-simple-select-outlined-label"
         {...input}
-        value={selectedIndex}
+        value={selected}
       >
         {renderOptions(options)}
       </Select>

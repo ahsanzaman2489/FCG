@@ -1,46 +1,91 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Field, reduxForm} from "redux-form";
 import PropTypes from "prop-types";
 import Select from "./formFields/Select";
 import {bindActionCreators} from "redux";
-import * as CarDetailActions from "../actions/CarActions";
-import * as CarTasksActions from "../actions/CarTasksActions";
+import * as CarActions from "../actions/CarActions";
 import {connect} from "react-redux";
+import Button from "@material-ui/core/Button";
 
-const CarInfo = ({}) => {
+const validate = values => {
+    const errors = {};
+    const requiredFields = ["make", "model", "trim"];
+    requiredFields.forEach(field => {
+        if (!values[field]) {
+            errors[field] = "Required";
+        }
+    });
+    return errors;
+};
 
+const CarInfo = ({carInfoDetails, carDetails, actions, handleSubmit}) => {
+    const {fetchMake, fetchModel, fetchTrim} = actions;
+    const [info, setInfo] = useState({
+        // make: carDetails.make,
+        // model: carDetails.model,
+        // trim: carDetails.trim,
+    });
+    const {make, models, trim} = carInfoDetails;
 
-    const statusChangeHandler = (e) => {
+    const infoChangeHandler = (e) => {
         e.preventDefault();
 
         const name = e.target.name;
         const value = e.target.value;
 
+        switch (name) {
+            case 'make':
+                setInfo({
+                    ...info,
+                    [name]: value,
+                    model: null,
+                    trim: null
+                });
+                fetchModel(value);
+                break;
+            case 'model':
+                fetchTrim(info.make, value);
+                setInfo({
+                    ...info,
+                    [name]: value,
+                    trim: null
+                });
+                break;
+            default:
+                setInfo({
+                    ...info,
+                    [name]: value,
+                });
+                break;
+        }
     };
+    const submitHandler = (values) => {
+        console.log(values)
+    };
+    useEffect(() => {
+        fetchMake(carDetails.make, carDetails.model);
+    }, []);
 
-    useEffect(()=>{
-        fetchMake()
-    },[]);
-
+    console.log(info)
     return (
-        <form>
+        <form onSubmit={handleSubmit(submitHandler)}>
             <h2>Status</h2>
             <Field
                 name={'make'}
                 component={Select}
                 label={'Make'}
                 options={make}
-                // selected={physicalStatus}
-                onChange={statusChangeHandler}
+                selected={info.make}
+                onChange={infoChangeHandler}
             />
 
             <Field
                 name={"model"}
                 component={Select}
                 label={"Select"}
-                options={model}
-                // selected={legalStatus}
-                onChange={statusChangeHandler}
+                options={models}
+                selected={info.model}
+                onChange={infoChangeHandler}
             />
 
             <Field
@@ -48,9 +93,13 @@ const CarInfo = ({}) => {
                 component={Select}
                 label={'Trim'}
                 options={trim}
-                // selected={sellingStatus}
-                onChange={statusChangeHandler}
+                selected={info.trim}
+                onChange={infoChangeHandler}
             />
+
+            <Button variant="contained" color="primary" type={'submit'}>
+                Update
+            </Button>
         </form>
     );
 };
@@ -68,17 +117,17 @@ const CarInfo = ({}) => {
 
 
 const mapStateToProps = state => ({
-    carDetails: state.CarReducer,
-    taskDetails: state.TaskReducer
+    carInfoDetails: state.CarInfoReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(
-        {...CarDetailActions, ...CarTasksActions},
+        CarActions,
         dispatch
     )
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-    form: "info"
+    form: "info",
+    validate,
 })(CarInfo));
