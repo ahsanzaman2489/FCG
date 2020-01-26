@@ -56,7 +56,7 @@ export const fetchModel = (selectedMake) => async dispatch => {
     try {
         const {response} = await request(modelQuery, {make: selectedMake});
         if (response) {
-            dispatch({type: CLEAR_TRIM, payload: true});
+            dispatch({type: CLEAR_ALL, payload: true});
             dispatch({type: FETCH_MODELS, payload: response.model})
         };
 

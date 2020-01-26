@@ -1,3 +1,24 @@
+const carQreryFragment = `
+    id
+    make
+    model
+    trim
+    engineType
+    physicalStatus
+    legalStatus
+    sellingStatus
+    financialDetails{
+      purchasePrice
+      purchaseDate
+      purchaseLocation
+      paymentDonePercentage
+      sellingPrice
+      sellingDate
+      sellingLocation
+      sellingDonePercentage
+      margin
+    }
+`
 export const carDetailQuery = `
 query($id:ID!){
   car(id:$id){
@@ -26,9 +47,25 @@ query($id:ID!){
 export const carUpdateMutation = `
 mutation($car:CarInput){
   updateCar(car:$car){
+   id
+    make
+    model
+    trim
+    engineType
     physicalStatus
     legalStatus
     sellingStatus
+    financialDetails{
+      purchasePrice
+      purchaseDate
+      purchaseLocation
+      paymentDonePercentage
+      sellingPrice
+      sellingDate
+      sellingLocation
+      sellingDonePercentage
+      margin
+    }
   }
 }`;
 

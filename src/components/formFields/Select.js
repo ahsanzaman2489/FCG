@@ -60,7 +60,7 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
       <Select
         labelId="demo-simple-select-outlined-label"
         {...input}
-        value={selected}
+        value={selectedIndex}
       >
         {renderOptions(options)}
       </Select>
