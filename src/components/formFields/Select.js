@@ -22,7 +22,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SelectComponent = ({ input, meta, options, label, selected }) => {
+const SelectComponent = ({
+  input,
+  meta,
+  options,
+  label,
+  selected,
+  ...rest
+}) => {
   // console.log(input, meta, options)
   // eslint-disable jsx-props-no-spreading
   const inputLabel = useRef(null);
@@ -34,13 +41,16 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
   }, [selected]);
 
   const renderOptions = selectOptions => {
-
     return selectOptions.map(item => {
-      return typeof item === 'string' ? <MenuItem value={item} key={item}>
-        {item}
-      </MenuItem> : <MenuItem value={item.value} key={item.value}>
-        {item.label}
-      </MenuItem>
+      return typeof item === "string" ? (
+        <MenuItem value={item} key={item}>
+          {item}
+        </MenuItem>
+      ) : (
+        <MenuItem value={item.value} key={item.value}>
+          {item.label}
+        </MenuItem>
+      );
     });
   };
 
@@ -61,10 +71,11 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
         labelId="demo-simple-select-outlined-label"
         {...input}
         value={selectedIndex}
+        {...rest}
       >
         {renderOptions(options)}
       </Select>
-      {meta.touched && meta.error && (
+      {meta && meta.touched && meta.error && (
         <FormHelperText>{meta.error}</FormHelperText>
       )}
     </FormControl>
@@ -72,15 +83,23 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
 };
 
 SelectComponent.propTypes = {
-  input: PropTypes.instanceOf(Object).isRequired,
-  meta: PropTypes.instanceOf(Object).isRequired,
+  input: PropTypes.instanceOf(Object),
+  meta: PropTypes.shape({
+    touched: PropTypes.bool,
+    error: PropTypes.any
+  }),
   options: PropTypes.arrayOf(Object),
   label: PropTypes.string.isRequired,
   selected: PropTypes.string
 };
 SelectComponent.defaultProps = {
   selected: null,
-  options: []
+  options: [],
+  input: {},
+  meta: {
+    touched: false,
+    error: false
+  }
 };
 
 export default SelectComponent;

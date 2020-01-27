@@ -18,54 +18,18 @@ const carQreryFragment = `
       sellingDonePercentage
       margin
     }
-`
+`;
 export const carDetailQuery = `
 query($id:ID!){
   car(id:$id){
-    id
-    make
-    model
-    trim
-    engineType
-    physicalStatus
-    legalStatus
-    sellingStatus
-    financialDetails{
-      purchasePrice
-      purchaseDate
-      purchaseLocation
-      paymentDonePercentage
-      sellingPrice
-      sellingDate
-      sellingLocation
-      sellingDonePercentage
-      margin
-    }
+   ${carQreryFragment}
   }
 }`;
 
 export const carUpdateMutation = `
 mutation($car:CarInput){
   updateCar(car:$car){
-   id
-    make
-    model
-    trim
-    engineType
-    physicalStatus
-    legalStatus
-    sellingStatus
-    financialDetails{
-      purchasePrice
-      purchaseDate
-      purchaseLocation
-      paymentDonePercentage
-      sellingPrice
-      sellingDate
-      sellingLocation
-      sellingDonePercentage
-      margin
-    }
+   ${carQreryFragment}
   }
 }`;
 
@@ -78,7 +42,6 @@ query($make:String!){
   model(make: $make)
 }`;
 
-
 export const trimQuery = `
 query(
 $make:String!
@@ -86,7 +49,6 @@ $model:String!
 ){
   trim(make: $make, model: $model)
 }`;
-
 
 export const carTaskQuery = `
 query($id:ID!){

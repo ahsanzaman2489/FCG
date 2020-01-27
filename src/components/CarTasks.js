@@ -86,28 +86,28 @@ const CarTasks = ({
     <div className={classes.grid}>
       <h2>list of tasks</h2>
       <div className={classes.overFlow}>
-            <Tooltip title="Add" aria-label="add" onClick={handleOpen}>
-              <Fab color="secondary" className={classes.absolute}>
-                <AddIcon />
-              </Fab>
-            </Tooltip>
-            {!tasks || tasks.length ===0 ? (
-              <h3>No tasks Available</h3>
-            ) : (
-              tasks.map(item => {
-                return (
-                  <SingleTask
-                    comment={item.comment}
-                    taskType={item.taskType}
-                    completed={item.completed}
-                    taskId={item.id}
-                    key={item.id}
-                    updateTaskAction={updateTaskAction}
-                    carId={carId}
-                  />
-                );
-              })
-            )}
+        <Tooltip title="Add" aria-label="add" onClick={handleOpen}>
+          <Fab color="secondary" className={classes.absolute}>
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+        {!tasks || tasks.length === 0 ? (
+          <h3>No tasks Available</h3>
+        ) : (
+          tasks.map(item => {
+            return (
+              <SingleTask
+                comment={item.comment}
+                taskType={item.taskType}
+                completed={item.completed}
+                taskId={item.id}
+                key={item.id}
+                updateTaskAction={updateTaskAction}
+                carId={carId}
+              />
+            );
+          })
+        )}
       </div>
 
       <Dialog
@@ -161,7 +161,7 @@ CarTasks.propTypes = {
 };
 
 CarTasks.defaultProps = {
-  carId:null
+  carId: null
 };
 
 export default reduxForm({
