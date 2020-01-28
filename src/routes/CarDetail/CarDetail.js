@@ -38,12 +38,15 @@ const useStyles = makeStyles({
   },
   thumbnail: {
     maxWidth: "100%"
+  },
+  notFound: {
+    textAlign: "center",
+    marginTop: 50
   }
 });
 
 const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
   const classes = useStyles();
-
   const {
     fetchCarDetails,
     updateCar,
@@ -64,10 +67,16 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
   } = carDetails;
 
   useEffect(() => {
-    fetchCarDetails(match.params.id);
-    fetchCarTasks(match.params.id);
-  }, [fetchCarDetails, fetchCarTasks, match.params.id]);
+    fetchCarDetails(match.params.id, carId => fetchCarTasks(carId));
+  }, []);
 
+  if (!carDetails.id && !carDetails.loading) {
+    return (
+      <div className={classes.notFound}>
+        <h2>Oppps car not found ...!!!</h2>
+      </div>
+    );
+  }
   return (
     <Container fixed>
       <Grid container className={classes.grid} spacing={3}>
@@ -110,7 +119,7 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
           </>
         )}
         <Grid item xs={6}>
-          {carDetails.make && (
+          {id && (
             <Suspense fallback={<Fallback />}>
               <CarInformation
                 carId={id}

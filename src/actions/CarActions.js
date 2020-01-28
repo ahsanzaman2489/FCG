@@ -20,12 +20,14 @@ import {
   trimQuery
 } from "../service/queries";
 
-export const fetchCarDetails = id => async dispatch => {
+export const fetchCarDetails = (id, cb) => async dispatch => {
   dispatch({ type: FETCHING_CAR_DETAILS });
   try {
     const { response } = await request(carDetailQuery, { id });
-
-    if (response) dispatch({ type: FETCH_CAR_DETAILS, payload: response.car });
+    if (response) {
+      dispatch({ type: FETCH_CAR_DETAILS, payload: response.car });
+      if (cb && response.car !== null) cb(id);
+    }
   } catch (error) {
     toast(error, {
       type: "error"
