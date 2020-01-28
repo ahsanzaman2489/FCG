@@ -1,17 +1,21 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Home from "./routes/Home/Home";
-import CarDetail from "./routes/CarDetail/CarDetail";
-import NotFound from "./routes/404";
+import Fallback from "./components/Fallback";
+
+const Home = lazy(() => import("./routes/Home/Home"));
+const CarDetail = lazy(() => import("./routes/CarDetail/CarDetail"));
+const NotFound = lazy(() => import("./routes/404"));
 
 function App() {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/detail/:id" component={CarDetail} />
-        <Route component={NotFound} />
-      </Switch>
+      <Suspense fallback={<Fallback />}>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/detail/:id" component={CarDetail} />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
     </BrowserRouter>
   );
 }

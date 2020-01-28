@@ -3,6 +3,7 @@ import request from "../service";
 import {
   FETCH_CAR_DETAILS,
   FETCHING_CAR_DETAILS,
+  FETCHING_CAR_DETAILS_DONE,
   UPDATE_CAR_DETAILS,
   FETCHING_CAR_INFO,
   FETCHING_CAR_INFO_DONE,
@@ -118,6 +119,7 @@ export const updateCar = ({ ...params }) => async dispatch => {
       type: "success"
     });
   } catch (error) {
+    dispatch({ type: FETCHING_CAR_DETAILS_DONE });
     toast(error, {
       type: "error"
     });

@@ -18,6 +18,7 @@ export const fetchCarTasks = id => async dispatch => {
     const { response } = await request(carTaskQuery, { id });
 
     if (response) dispatch({ type: FETCH_CAR_TASK, payload: response.tasks });
+    else dispatch({ type: FETCHING_CAR_TASK_DONE });
   } catch (error) {
     toast(error, {
       type: "error"
@@ -38,8 +39,8 @@ export const addTask = ({ id, type, comment }) => async dispatch => {
         toast("Task Created successfully", {
           type: "success"
         });
-      }
-    }
+      } else dispatch({ type: FETCHING_CAR_TASK_DONE });
+    } else dispatch({ type: FETCHING_CAR_TASK_DONE });
   } catch (error) {
     toast(error, {
       type: "error"
@@ -59,7 +60,7 @@ export const updateTask = ({ taskId, completed }) => async dispatch => {
 
     if (result.response)
       dispatch({ type: UPDATE_TASK, payload: result.response.updateTask });
-
+    else dispatch({ type: FETCHING_CAR_TASK_DONE });
     toast("Task updated successfully", {
       type: "success"
     });

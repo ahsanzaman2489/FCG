@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -8,13 +8,18 @@ import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
 import * as CarDetailActions from "../../actions/CarActions";
 import * as CarTasksActions from "../../actions/CarTasksActions";
-import CardComponent from "../../components/Card";
-import CarStatus from "../../components/CarStatus";
-import CarFinancialInfo from "../../components/CarFinancialInfo";
-import CarTasks from "../../components/CarTasks";
-import CarInformation from "../../components/Carinfo";
-import Spinner from "../../components/Spinner";
+
 import CarImage from "../../images/altroz.jpg";
+import Fallback from "../../components/Fallback";
+import Spinner from "../../components/Spinner";
+
+const CardComponent = lazy(() => import("../../components/Card"));
+const CarStatus = lazy(() => import("../../components/CarStatus"));
+const CarFinancialInfo = lazy(() =>
+  import("../../components/CarFinancialInfo")
+);
+const CarTasks = lazy(() => import("../../components/CarTasks"));
+const CarInformation = lazy(() => import("../../components/Carinfo"));
 
 const useStyles = makeStyles({
   grid: {
@@ -75,47 +80,61 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
             </h1>
             <Grid container item xs={12} spacing={3}>
               <Grid item xs={5}>
-                <CardComponent>
-                  <img className={classes.thumbnail} src={CarImage} alt="Car" />
-                </CardComponent>
+                <Suspense fallback={<Fallback />}>
+                  <CardComponent>
+                    <img
+                      className={classes.thumbnail}
+                      src={CarImage}
+                      alt="Car"
+                    />
+                  </CardComponent>
+                </Suspense>
               </Grid>
               <Grid item xs={3}>
-                <CarStatus
-                  id={id}
-                  physicalStatus={physicalStatus}
-                  legalStatus={legalStatus}
-                  sellingStatus={sellingStatus}
-                  updateCar={updateCar}
-                />
+                <Suspense fallback={<Fallback />}>
+                  <CarStatus
+                    id={id}
+                    physicalStatus={physicalStatus}
+                    legalStatus={legalStatus}
+                    sellingStatus={sellingStatus}
+                    updateCar={updateCar}
+                  />
+                </Suspense>
               </Grid>
               <Grid item xs={4}>
-                <CarFinancialInfo financialDetails={financialDetails} />
+                <Suspense fallback={<Fallback />}>
+                  <CarFinancialInfo financialDetails={financialDetails} />
+                </Suspense>
               </Grid>
             </Grid>
           </>
         )}
         <Grid item xs={6}>
           {carDetails.make && (
-            <CarInformation
-              carId={id}
-              carMake={make}
-              carModel={model}
-              carTrim={trim}
-            />
+            <Suspense fallback={<Fallback />}>
+              <CarInformation
+                carId={id}
+                carMake={make}
+                carModel={model}
+                carTrim={trim}
+              />
+            </Suspense>
           )}
         </Grid>
         <Grid item xs={6}>
           {!id || taskDetails.loading ? (
             <Spinner />
           ) : (
-            <CardComponent>
-              <CarTasks
-                carId={id}
-                addTaskAction={addTask}
-                updateTaskAction={updateTask}
-                taskDetails={taskDetails}
-              />
-            </CardComponent>
+            <Suspense fallback={<Fallback />}>
+              <CardComponent>
+                <CarTasks
+                  carId={id}
+                  addTaskAction={addTask}
+                  updateTaskAction={updateTask}
+                  taskDetails={taskDetails}
+                />
+              </CardComponent>
+            </Suspense>
           )}
         </Grid>
       </Grid>

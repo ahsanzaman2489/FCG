@@ -14,15 +14,16 @@ import SingleTask from "./SingleTask";
 import Select from "./formFields/Select";
 import Input from "./formFields/Input";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   grid: {
     position: "relative",
     minHeight: 305
   },
   absolute: {
     position: "absolute",
-    bottom: theme.spacing(2),
-    right: theme.spacing(3)
+    bottom: 0,
+    right: 4,
+    zIndex: 99
   },
   overFlow: {
     overflowY: "auto",
