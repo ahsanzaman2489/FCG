@@ -51,7 +51,7 @@ const CarInfo = ({
 
     setInfo(newInfo);
     previousInfo.current = newInfo;
-  }, [carMake, carModel, carTrim, fetchMake]);
+  }, []);
 
   const infoChangeHandler = e => {
     e.preventDefault();

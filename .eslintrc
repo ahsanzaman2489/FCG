@@ -18,6 +18,7 @@
         "semi": true
       }
     ],
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "react-hooks/exhaustive-deps": "off"
   }
 }
