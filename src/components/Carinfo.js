@@ -59,6 +59,10 @@ const CarInfo = ({
     const { name } = e.target;
     const { value } = e.target;
 
+    if (info[name] === value) {
+      return;
+    }
+
     switch (name) {
       case "make":
         setInfo({
