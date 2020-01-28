@@ -26,12 +26,15 @@ const SingleTasks = ({
         return <LocalCarWashIcon />;
       case "ADD_PAYMENT_DETAILS":
         return <PaymentIcon />;
+      default:
+        return <AttachFileIcon />;
     }
   };
 
-  const onChangeHandler = (taskId, carId, completed) => {
-    updateTaskAction({ taskId, carId, completed });
+  const onChangeHandler = (tid, cId, comp) => {
+    updateTaskAction({ taskId: tid, carId: cId, completed: comp });
   };
+
   return (
     <>
       <ListItem key={1} role={undefined} dense>
@@ -41,7 +44,7 @@ const SingleTasks = ({
             checked={completed}
             tabIndex={-1}
             inputProps={{ "aria-labelledby": 1 }}
-            onChange={e => onChangeHandler(taskId, carId, !completed)}
+            onChange={() => onChangeHandler(taskId, carId, !completed)}
           />
         </ListItemIcon>
         <ListItemText id={1} primary={`${comment}`} />
@@ -51,7 +54,13 @@ const SingleTasks = ({
   );
 };
 
-SingleTasks.propTypes = {};
-SingleTasks.defaultProps = {};
+SingleTasks.propTypes = {
+  carId: PropTypes.string.isRequired,
+  completed: PropTypes.bool.isRequired,
+  comment: PropTypes.string.isRequired,
+  taskId: PropTypes.string.isRequired,
+  taskType: PropTypes.string.isRequired,
+  updateTaskAction: PropTypes.func.isRequired
+};
 
 export default SingleTasks;

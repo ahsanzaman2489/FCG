@@ -24,16 +24,18 @@ export default (state = { loading: false, tasks: null }, action) => {
         tasks: action.payload
       };
     case UPDATE_TASK:
-      const newTasks = state.tasks.map(item => {
-        if (action.payload.id === item.id) {
-          item.completed = action.payload.completed;
-        }
-        return item;
-      });
       return {
         ...state,
         loading: false,
-        tasks: newTasks
+        tasks: state.tasks.map(item => {
+          if (action.payload.id === item.id) {
+            return {
+              ...item,
+              completed: action.payload.completed
+            };
+          }
+          return item;
+        })
       };
     default:
       return state;

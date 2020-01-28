@@ -3,7 +3,13 @@ import { Field, reduxForm } from "redux-form";
 import PropTypes from "prop-types";
 import Select from "./formFields/Select";
 
-const CarStatus = ({ physicalStatus, legalStatus, sellingStatus }) => {
+const CarStatus = ({
+  id,
+  physicalStatus,
+  legalStatus,
+  sellingStatus,
+  updateCar
+}) => {
   const physicalStatusField = {
     label: "physical status",
     name: "physicalStatus",
@@ -26,7 +32,7 @@ const CarStatus = ({ physicalStatus, legalStatus, sellingStatus }) => {
 
   const SellingStatusField = {
     label: "selling status",
-    name: "SellingStatus",
+    name: "sellingStatus",
     options: [
       { label: "available", value: "AVAILABLE" },
       { label: "pending", value: "PENDING" },
@@ -34,7 +40,19 @@ const CarStatus = ({ physicalStatus, legalStatus, sellingStatus }) => {
       { label: "reserved", value: "RESERVED" }
     ]
   };
+  const statusChangeHandler = e => {
+    e.preventDefault();
 
+    const { name } = e.target;
+    const { value } = e.target;
+
+    updateCar({
+      car: {
+        id,
+        [name]: value
+      }
+    });
+  };
   return (
     <>
       <h2>Status</h2>
@@ -44,6 +62,7 @@ const CarStatus = ({ physicalStatus, legalStatus, sellingStatus }) => {
         label={physicalStatusField.label}
         options={physicalStatusField.options}
         selected={physicalStatus}
+        onChange={statusChangeHandler}
       />
 
       <Field
@@ -52,6 +71,7 @@ const CarStatus = ({ physicalStatus, legalStatus, sellingStatus }) => {
         label={legalStatusField.label}
         options={legalStatusField.options}
         selected={legalStatus}
+        onChange={statusChangeHandler}
       />
 
       <Field
@@ -60,20 +80,24 @@ const CarStatus = ({ physicalStatus, legalStatus, sellingStatus }) => {
         label={SellingStatusField.label}
         options={SellingStatusField.options}
         selected={sellingStatus}
+        onChange={statusChangeHandler}
       />
     </>
   );
 };
 
 CarStatus.propTypes = {
+  id: PropTypes.string,
   physicalStatus: PropTypes.string,
   legalStatus: PropTypes.string,
-  sellingStatus: PropTypes.string
+  sellingStatus: PropTypes.string,
+  updateCar: PropTypes.func.isRequired
 };
 CarStatus.defaultProps = {
   physicalStatus: null,
   legalStatus: null,
-  sellingStatus: null
+  sellingStatus: null,
+  id: null
 };
 
 export default reduxForm({

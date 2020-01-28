@@ -5,6 +5,7 @@ import styles from "./Home.module.css";
 
 const Home = ({ history }) => {
   const [id, setId] = useState("20664c0d-266e-4950-a70d-c0a63afd510b");
+
   const onChangeHandler = e => {
     setId(e.currentTarget.value);
   };
@@ -16,7 +17,7 @@ const Home = ({ history }) => {
   };
   return (
     <Container fixed>
-      <Grid container className={styles.grid} spacing={3}>
+      <Grid container className={styles.grid}>
         <Grid item xs={7}>
           <TextField
             name="carId"
@@ -43,9 +44,7 @@ const Home = ({ history }) => {
 };
 
 Home.propTypes = {
-  history: propTypes.objectOf({
-    push: propTypes.func
-  }).isRequired
+  history: propTypes.instanceOf(Object).isRequired
 };
 
 export default Home;

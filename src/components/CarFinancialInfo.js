@@ -8,7 +8,6 @@ import {
   ListItemText,
   ListSubheader
 } from "@material-ui/core";
-import styles from "../App.module.css";
 
 const useStyles = makeStyles(theme => ({
   h2: {
@@ -36,7 +35,7 @@ const CarFinancialInfo = ({ financialDetails }) => {
 
   return (
     <>
-      <h2 className={styles.h2}>financial information</h2>
+      <h2>financial information</h2>
 
       <Grid container direction="row" spacing={3}>
         <Grid container item xs={12} spacing={3}>
@@ -67,8 +66,8 @@ const CarFinancialInfo = ({ financialDetails }) => {
               <ListItemText
                 primary={
                   <>
-                    ${sellingPrice}{" "}
-                    <span className={classes.margin}>{margin}</span> (
+                    ${sellingPrice}
+                    <span className={classes.margin}> {margin}%</span> <br />(
                     {sellingDate} , {sellingLocation})
                   </>
                 }
@@ -89,7 +88,31 @@ const CarFinancialInfo = ({ financialDetails }) => {
 };
 
 CarFinancialInfo.propTypes = {
-  financialDetails: PropTypes.instanceOf(Object).isRequired
+  financialDetails: PropTypes.shape({
+    purchasePrice: PropTypes.number,
+    purchaseDate: PropTypes.string,
+    purchaseLocation: PropTypes.string,
+    paymentDonePercentage: PropTypes.number,
+    sellingPrice: PropTypes.number,
+    sellingDate: PropTypes.string,
+    sellingLocation: PropTypes.string,
+    sellingDonePercentage: PropTypes.number,
+    margin: PropTypes.number
+  })
 };
 
-export default CarFinancialInfo;
+CarFinancialInfo.defaultProps = {
+  financialDetails: {
+    purchasePrice: null,
+    purchaseDate: "",
+    purchaseLocation: "",
+    paymentDonePercentage: null,
+    sellingPrice: null,
+    sellingDate: "",
+    sellingLocation: "",
+    sellingDonePercentage: null,
+    margin: null
+  }
+};
+
+export default React.memo(CarFinancialInfo);

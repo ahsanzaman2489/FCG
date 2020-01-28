@@ -1,6 +1,4 @@
-export const carDetailQuery = `
-query($id:ID!){
-  car(id:$id){
+const carQreryFragment = `
     id
     make
     model
@@ -20,7 +18,36 @@ query($id:ID!){
       sellingDonePercentage
       margin
     }
+`;
+export const carDetailQuery = `
+query($id:ID!){
+  car(id:$id){
+   ${carQreryFragment}
   }
+}`;
+
+export const carUpdateMutation = `
+mutation($car:CarInput){
+  updateCar(car:$car){
+   ${carQreryFragment}
+  }
+}`;
+
+export const makeQuery = `
+query{
+  make
+}`;
+export const modelQuery = `
+query($make:String!){
+  model(make: $make)
+}`;
+
+export const trimQuery = `
+query(
+$make:String!
+$model:String!
+){
+  trim(make: $make, model: $model)
 }`;
 
 export const carTaskQuery = `

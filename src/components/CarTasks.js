@@ -14,15 +14,16 @@ import SingleTask from "./SingleTask";
 import Select from "./formFields/Select";
 import Input from "./formFields/Input";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   grid: {
     position: "relative",
-    minHeight: 400
+    minHeight: 305
   },
   absolute: {
     position: "absolute",
-    bottom: theme.spacing(2),
-    right: theme.spacing(3)
+    bottom: 0,
+    right: 4,
+    zIndex: 99
   },
   overFlow: {
     overflowY: "auto",
@@ -43,7 +44,6 @@ const validate = values => {
 
 const CarTasks = ({
   taskDetails,
-  spinner,
   carId,
   handleSubmit,
   addTaskAction,
@@ -87,33 +87,27 @@ const CarTasks = ({
     <div className={classes.grid}>
       <h2>list of tasks</h2>
       <div className={classes.overFlow}>
-        {taskDetails.loading ? (
-          spinner
+        <Tooltip title="Add" aria-label="add" onClick={handleOpen}>
+          <Fab color="secondary" className={classes.absolute}>
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+        {!tasks || tasks.length === 0 ? (
+          <h3>No tasks Available</h3>
         ) : (
-          <>
-            <Tooltip title="Add" aria-label="add" onClick={handleOpen}>
-              <Fab color="secondary" className={classes.absolute}>
-                <AddIcon />
-              </Fab>
-            </Tooltip>
-            {!tasks ? (
-              <h3>No task Available</h3>
-            ) : (
-              tasks.map(item => {
-                return (
-                  <SingleTask
-                    comment={item.comment}
-                    taskType={item.taskType}
-                    completed={item.completed}
-                    taskId={item.id}
-                    key={item.id}
-                    updateTaskAction={updateTaskAction}
-                    carId={carId}
-                  />
-                );
-              })
-            )}
-          </>
+          tasks.map(item => {
+            return (
+              <SingleTask
+                comment={item.comment}
+                taskType={item.taskType}
+                completed={item.completed}
+                taskId={item.id}
+                key={item.id}
+                updateTaskAction={updateTaskAction}
+                carId={carId}
+              />
+            );
+          })
         )}
       </div>
 
@@ -161,11 +155,14 @@ const CarTasks = ({
 
 CarTasks.propTypes = {
   taskDetails: PropTypes.instanceOf(Object).isRequired,
-  spinner: PropTypes.node.isRequired,
-  carId: PropTypes.string.isRequired,
+  carId: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   addTaskAction: PropTypes.func.isRequired,
   updateTaskAction: PropTypes.func.isRequired
+};
+
+CarTasks.defaultProps = {
+  carId: null
 };
 
 export default reduxForm({

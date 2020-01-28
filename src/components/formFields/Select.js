@@ -22,10 +22,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SelectComponent = ({ input, meta, options, label, selected }) => {
-  // console.log(input, meta, options)
+const SelectComponent = ({
+  input,
+  meta,
+  options,
+  label,
+  selected,
+  ...rest
+}) => {
   // eslint-disable jsx-props-no-spreading
   const inputLabel = useRef(null);
+  const inputValue = useRef(selected);
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = useState("");
 
@@ -35,7 +42,11 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
 
   const renderOptions = selectOptions => {
     return selectOptions.map(item => {
-      return (
+      return typeof item === "string" ? (
+        <MenuItem value={item} key={item}>
+          {item}
+        </MenuItem>
+      ) : (
         <MenuItem value={item.value} key={item.value}>
           {item.label}
         </MenuItem>
@@ -59,11 +70,16 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
       <Select
         labelId="demo-simple-select-outlined-label"
         {...input}
+        onChange={event => {
+          if (inputValue.current === event.target.value) return false;
+          return input.onChange(event);
+        }}
         value={selectedIndex}
+        {...rest}
       >
         {renderOptions(options)}
       </Select>
-      {meta.touched && meta.error && (
+      {meta && meta.touched && meta.error && (
         <FormHelperText>{meta.error}</FormHelperText>
       )}
     </FormControl>
@@ -71,15 +87,23 @@ const SelectComponent = ({ input, meta, options, label, selected }) => {
 };
 
 SelectComponent.propTypes = {
-  input: PropTypes.instanceOf(Object).isRequired,
-  meta: PropTypes.instanceOf(Object).isRequired,
+  input: PropTypes.instanceOf(Object),
+  meta: PropTypes.shape({
+    touched: PropTypes.bool,
+    error: PropTypes.any
+  }),
   options: PropTypes.arrayOf(Object),
   label: PropTypes.string.isRequired,
   selected: PropTypes.string
 };
 SelectComponent.defaultProps = {
   selected: null,
-  options: []
+  options: [],
+  input: {},
+  meta: {
+    touched: false,
+    error: false
+  }
 };
 
 export default SelectComponent;
