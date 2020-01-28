@@ -5,6 +5,7 @@ import {
   FETCHING_CAR_DETAILS,
   UPDATE_CAR_DETAILS,
   FETCHING_CAR_INFO,
+  FETCHING_CAR_INFO_DONE,
   FETCH_MAKE,
   FETCH_MODELS,
   FETCH_TRIM,
@@ -42,19 +43,28 @@ export const fetchMake = (selectedMake, selectedModel) => async dispatch => {
 
     if (selectedMake) {
       const modelResponse = await request(modelQuery, { make: selectedMake });
-      if (modelResponse.response)
+      if (modelResponse.response) {
         dispatch({ type: FETCH_MODELS, payload: modelResponse.response.model });
+        dispatch({ type: FETCHING_CAR_INFO_DONE });
+      }
 
       if (selectedMake && selectedModel) {
         const trimResponse = await request(trimQuery, {
           make: selectedMake,
           model: selectedModel
         });
-        if (trimResponse.response)
+        if (trimResponse.response) {
           dispatch({ type: FETCH_TRIM, payload: trimResponse.response.trim });
+          dispatch({ type: FETCHING_CAR_INFO_DONE });
+        }
+      } else {
+        dispatch({ type: FETCHING_CAR_INFO_DONE });
       }
+    } else {
+      dispatch({ type: FETCHING_CAR_INFO_DONE });
     }
   } catch (error) {
+    dispatch({ type: FETCHING_CAR_INFO_DONE });
     toast(error, {
       type: "error"
     });
@@ -69,7 +79,9 @@ export const fetchModel = selectedMake => async dispatch => {
       dispatch({ type: CLEAR_ALL, payload: true });
       dispatch({ type: FETCH_MODELS, payload: response.model });
     }
+    dispatch({ type: FETCHING_CAR_INFO_DONE });
   } catch (error) {
+    dispatch({ type: FETCHING_CAR_INFO_DONE });
     toast(error, {
       type: "error"
     });
@@ -83,8 +95,12 @@ export const fetchTrim = (selectedMake, selectedModel) => async dispatch => {
       make: selectedMake,
       model: selectedModel
     });
-    if (response) dispatch({ type: FETCH_TRIM, payload: response.trim });
+    if (response) {
+      dispatch({ type: FETCH_TRIM, payload: response.trim });
+    }
+    dispatch({ type: FETCHING_CAR_INFO_DONE });
   } catch (error) {
+    dispatch({ type: FETCHING_CAR_INFO_DONE });
     toast(error, {
       type: "error"
     });

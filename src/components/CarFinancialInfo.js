@@ -89,7 +89,31 @@ const CarFinancialInfo = ({ financialDetails }) => {
 };
 
 CarFinancialInfo.propTypes = {
-  financialDetails: PropTypes.instanceOf(Object).isRequired
+  financialDetails: PropTypes.shape({
+    purchasePrice: PropTypes.number,
+    purchaseDate: PropTypes.string,
+    purchaseLocation: PropTypes.string,
+    paymentDonePercentage: PropTypes.number,
+    sellingPrice: PropTypes.number,
+    sellingDate: PropTypes.string,
+    sellingLocation: PropTypes.string,
+    sellingDonePercentage: PropTypes.number,
+    margin: PropTypes.number
+  })
 };
 
-export default CarFinancialInfo;
+CarFinancialInfo.defaultProps = {
+  financialDetails: {
+    purchasePrice: null,
+    purchaseDate: "",
+    purchaseLocation: "",
+    paymentDonePercentage: null,
+    sellingPrice: null,
+    sellingDate: "",
+    sellingLocation: "",
+    sellingDonePercentage: null,
+    margin: null
+  }
+};
+
+export default React.memo(CarFinancialInfo);

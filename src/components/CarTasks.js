@@ -17,7 +17,7 @@ import Input from "./formFields/Input";
 const useStyles = makeStyles(theme => ({
   grid: {
     position: "relative",
-    minHeight: 400
+    minHeight: 305
   },
   absolute: {
     position: "absolute",

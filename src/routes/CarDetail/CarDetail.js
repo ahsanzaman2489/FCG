@@ -2,12 +2,7 @@ import React, { useEffect } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import {
-  Container,
-  Grid,
-  makeStyles,
-  CircularProgress
-} from "@material-ui/core";
+import { Container, Grid, makeStyles } from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
@@ -18,6 +13,7 @@ import CarStatus from "../../components/CarStatus";
 import CarFinancialInfo from "../../components/CarFinancialInfo";
 import CarTasks from "../../components/CarTasks";
 import CarInformation from "../../components/Carinfo";
+import Spinner from "../../components/Spinner";
 import CarImage from "../../images/altroz.jpg";
 
 const useStyles = makeStyles({
@@ -37,16 +33,12 @@ const useStyles = makeStyles({
   },
   thumbnail: {
     maxWidth: "100%"
-  },
-  spinnerGrid: {
-    justifyContent: "center",
-    minHeight: 400,
-    alignItems: "center"
   }
 });
 
 const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
   const classes = useStyles();
+
   const {
     fetchCarDetails,
     updateCar,
@@ -54,21 +46,17 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
     addTask,
     updateTask
   } = actions;
+
   const {
     make,
     model,
+    trim,
     physicalStatus,
     legalStatus,
     sellingStatus,
-    financialDetails,
-    id
+    id,
+    financialDetails
   } = carDetails;
-
-  const spinnerGrid = (
-    <Grid container item xs={12} spacing={3} className={classes.spinnerGrid}>
-      <CircularProgress />
-    </Grid>
-  );
 
   useEffect(() => {
     fetchCarDetails(match.params.id);
@@ -79,11 +67,11 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
     <Container fixed>
       <Grid container className={classes.grid} spacing={3}>
         {carDetails.loading ? (
-          spinnerGrid
+          <Spinner />
         ) : (
           <>
             <h1>
-              {make} {model}
+              {make} {model} {trim}
             </h1>
             <Grid container item xs={12} spacing={3}>
               <Grid item xs={5}>
@@ -101,25 +89,24 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
                 />
               </Grid>
               <Grid item xs={4}>
-                {financialDetails && (
-                  <CarFinancialInfo financialDetails={financialDetails} />
-                )}
+                <CarFinancialInfo financialDetails={financialDetails} />
               </Grid>
             </Grid>
           </>
         )}
         <Grid item xs={6}>
-          {carDetails.loading ? (
-            spinnerGrid
-          ) : (
-            <CardComponent>
-              <CarInformation />
-            </CardComponent>
+          {carDetails.make && (
+            <CarInformation
+              carId={id}
+              carMake={make}
+              carModel={model}
+              carTrim={trim}
+            />
           )}
         </Grid>
         <Grid item xs={6}>
-          {taskDetails.loading ? (
-            spinnerGrid
+          {!id || taskDetails.loading ? (
+            <Spinner />
           ) : (
             <CardComponent>
               <CarTasks

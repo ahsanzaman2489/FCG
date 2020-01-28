@@ -1,6 +1,7 @@
 import {
   FETCH_MAKE,
   FETCHING_CAR_INFO,
+  FETCHING_CAR_INFO_DONE,
   FETCH_MODELS,
   FETCH_TRIM,
   CLEAR_ALL
@@ -13,29 +14,30 @@ export default (state = { loading: false }, action) => {
         ...state,
         loading: true
       };
+    case FETCHING_CAR_INFO_DONE:
+      return {
+        ...state,
+        loading: false
+      };
     case FETCH_MAKE:
       return {
         ...state,
-        loading: false,
         make: action.payload
       };
     case FETCH_MODELS:
       return {
         ...state,
-        loading: false,
         models: action.payload
       };
     case CLEAR_ALL:
       return {
         ...state,
-        loading: false,
         models: [],
         trim: []
       };
     case FETCH_TRIM:
       return {
         ...state,
-        loading: false,
         trim: action.payload
       };
     default:

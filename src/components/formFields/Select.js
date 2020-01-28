@@ -30,9 +30,9 @@ const SelectComponent = ({
   selected,
   ...rest
 }) => {
-  // console.log(input, meta, options)
   // eslint-disable jsx-props-no-spreading
   const inputLabel = useRef(null);
+  const inputValue = useRef(selected);
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = useState("");
 
@@ -70,6 +70,10 @@ const SelectComponent = ({
       <Select
         labelId="demo-simple-select-outlined-label"
         {...input}
+        onChange={event => {
+          if (inputValue.current === event.target.value) return false;
+          return input.onChange(event);
+        }}
         value={selectedIndex}
         {...rest}
       >

@@ -8,6 +8,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import { makeStyles } from "@material-ui/core";
 import * as CarActions from "../actions/CarActions";
 import Select from "./formFields/Select";
+import Spinner from "./Spinner";
+import CardComponent from "./Card";
 
 const useStyles = makeStyles(() => ({
   error: {
@@ -16,11 +18,18 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const CarInfo = ({ carInfoDetails, carDetails, actions }) => {
+const CarInfo = ({
+  carInfoDetails,
+  carId,
+  carMake,
+  carModel,
+  carTrim,
+  actions
+}) => {
   const classes = useStyles();
 
   const { fetchMake, fetchModel, fetchTrim, updateCar } = actions;
-  const { make, models, trim } = carInfoDetails;
+  const { make, models, loading, trim } = carInfoDetails;
 
   const [error, setError] = useState(false);
   const previousInfo = useRef();
@@ -32,20 +41,17 @@ const CarInfo = ({ carInfoDetails, carDetails, actions }) => {
   });
 
   useEffect(() => {
-    fetchMake(carDetails.make, carDetails.model);
-  }, [carDetails.make, carDetails.model, fetchMake]);
+    fetchMake(carMake, carModel);
 
-  useEffect(() => {
-    if (!carDetails.loading) {
-      const newInfo = {
-        make: carDetails.make,
-        model: carDetails.model,
-        trim: carDetails.trim
-      };
-      setInfo(newInfo);
-      previousInfo.current = newInfo;
-    }
-  }, [carDetails]);
+    const newInfo = {
+      make: carMake,
+      model: carModel,
+      trim: carTrim
+    };
+
+    setInfo(newInfo);
+    previousInfo.current = newInfo;
+  }, [carMake, carModel, carTrim, fetchMake]);
 
   const infoChangeHandler = e => {
     e.preventDefault();
@@ -93,9 +99,10 @@ const CarInfo = ({ carInfoDetails, carDetails, actions }) => {
 
     if (!hasError && !isEqual(previousInfo.current, info)) {
       setError(false);
+      previousInfo.current = info;
       updateCar({
         car: {
-          id: carDetails.id,
+          id: carId,
           ...info
         }
       });
@@ -103,53 +110,63 @@ const CarInfo = ({ carInfoDetails, carDetails, actions }) => {
   };
 
   return (
-    <form onSubmit={submitHandler}>
-      <h2>Status</h2>
-      <Select
-        name="make"
-        label="Make"
-        options={make}
-        selected={info.make}
-        onChange={infoChangeHandler}
-      />
+    <>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <CardComponent>
+          <form onSubmit={submitHandler}>
+            <h2>Status</h2>
+            <Select
+              name="make"
+              label="Make"
+              options={make}
+              selected={info.make}
+              onChange={infoChangeHandler}
+            />
 
-      <Select
-        name="model"
-        label="Model"
-        options={models}
-        selected={info.model}
-        onChange={infoChangeHandler}
-      />
+            <Select
+              name="model"
+              label="Model"
+              options={models}
+              selected={info.model}
+              onChange={infoChangeHandler}
+            />
 
-      <Select
-        name="trim"
-        label="Trim"
-        options={trim}
-        selected={info.trim}
-        onChange={infoChangeHandler}
-      />
-      {error && (
-        <FormHelperText className={classes.error}>
-          Please select the above fields
-        </FormHelperText>
+            <Select
+              name="trim"
+              label="Trim"
+              options={trim}
+              selected={info.trim}
+              onChange={infoChangeHandler}
+            />
+            {error && (
+              <FormHelperText className={classes.error}>
+                Please select the above fields
+              </FormHelperText>
+            )}
+            <Button variant="contained" color="primary" type="submit">
+              Update
+            </Button>
+          </form>
+        </CardComponent>
       )}
-      <Button variant="contained" color="primary" type="submit">
-        Update
-      </Button>
-    </form>
+    </>
   );
 };
 
 CarInfo.propTypes = {
   carInfoDetails: PropTypes.instanceOf(Object).isRequired,
-  carDetails: PropTypes.instanceOf(Object).isRequired,
-  actions: PropTypes.instanceOf(Object).isRequired
+  actions: PropTypes.instanceOf(Object).isRequired,
+  carId: PropTypes.string.isRequired,
+  carMake: PropTypes.string.isRequired,
+  carModel: PropTypes.string.isRequired,
+  carTrim: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    carInfoDetails: state.CarInfoReducer,
-    carDetails: state.CarReducer
+    carInfoDetails: state.CarInfoReducer
   };
 };
 
