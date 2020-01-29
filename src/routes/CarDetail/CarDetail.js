@@ -63,7 +63,8 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
     legalStatus,
     sellingStatus,
     id,
-    financialDetails
+    financialDetails,
+    engineType
   } = carDetails;
 
   useEffect(() => {
@@ -119,16 +120,15 @@ const CarDetail = ({ actions, carDetails, taskDetails, match }) => {
           </>
         )}
         <Grid item xs={6}>
-          {id && (
-            <Suspense fallback={<Fallback />}>
-              <CarInformation
-                carId={id}
-                carMake={make}
-                carModel={model}
-                carTrim={trim}
-              />
-            </Suspense>
-          )}
+          <Suspense fallback={<Fallback />}>
+            <CarInformation
+              carId={id}
+              carMake={make}
+              carModel={model}
+              carTrim={trim}
+              carEngineType={engineType}
+            />
+          </Suspense>
         </Grid>
         <Grid item xs={6}>
           {!id || taskDetails.loading ? (
