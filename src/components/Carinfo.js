@@ -24,7 +24,8 @@ const CarInfo = ({
   carMake,
   carModel,
   carTrim,
-  actions
+  actions,
+  carEngineType
 }) => {
   const classes = useStyles();
 
@@ -32,26 +33,38 @@ const CarInfo = ({
   const { make, models, loading, trim } = carInfoDetails;
 
   const [error, setError] = useState(false);
+  const previousCarId = useRef();
   const previousInfo = useRef();
 
   const [info, setInfo] = useState({
     make: null,
     model: null,
-    trim: null
+    trim: null,
+    engineType: null
   });
 
   useEffect(() => {
-    fetchMake(carMake, carModel);
+    if (!isEqual(previousCarId.current, carId) && carId !== "") {
+      fetchMake(carMake, carModel);
+      const newInfo = {
+        make: carMake,
+        model: carModel,
+        trim: carTrim,
+        engineType: carEngineType
+      };
 
-    const newInfo = {
-      make: carMake,
-      model: carModel,
-      trim: carTrim
-    };
+      setInfo(newInfo);
+      previousInfo.current = newInfo;
+      previousCarId.current = carId;
+    }
+  }, [carId]);
 
-    setInfo(newInfo);
-    previousInfo.current = newInfo;
-  }, []);
+  const engineTypeOptions = [
+    { label: "VEE", value: "VEE" },
+    { label: "INLINE", value: "INLINE" },
+    { label: "BOXER", value: "BOXER" },
+    { label: "ROTARY", value: "ROTARY" }
+  ];
 
   const infoChangeHandler = e => {
     e.preventDefault();
@@ -115,7 +128,7 @@ const CarInfo = ({
 
   return (
     <>
-      {loading ? (
+      {!carId || loading ? (
         <Spinner />
       ) : (
         <CardComponent>
@@ -144,6 +157,15 @@ const CarInfo = ({
               selected={info.trim}
               onChange={infoChangeHandler}
             />
+
+            <Select
+              name="engineType"
+              label="Engine Type"
+              options={engineTypeOptions}
+              selected={info.engineType}
+              onChange={infoChangeHandler}
+            />
+
             {error && (
               <FormHelperText className={classes.error}>
                 Please select the above fields
@@ -162,10 +184,19 @@ const CarInfo = ({
 CarInfo.propTypes = {
   carInfoDetails: PropTypes.instanceOf(Object).isRequired,
   actions: PropTypes.instanceOf(Object).isRequired,
-  carId: PropTypes.string.isRequired,
-  carMake: PropTypes.string.isRequired,
-  carModel: PropTypes.string.isRequired,
-  carTrim: PropTypes.string.isRequired
+  carId: PropTypes.string,
+  carMake: PropTypes.string,
+  carModel: PropTypes.string,
+  carTrim: PropTypes.string,
+  carEngineType: PropTypes.string
+};
+
+CarInfo.defaultProps = {
+  carId: "",
+  carMake: "",
+  carModel: "",
+  carTrim: "",
+  carEngineType: ""
 };
 
 const mapStateToProps = state => {
@@ -178,4 +209,6 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(CarActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CarInfo);
+export default React.memo(
+  connect(mapStateToProps, mapDispatchToProps)(CarInfo)
+);

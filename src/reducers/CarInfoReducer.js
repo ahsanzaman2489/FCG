@@ -4,11 +4,16 @@ import {
   FETCHING_CAR_INFO_DONE,
   FETCH_MODELS,
   FETCH_TRIM,
-  CLEAR_ALL
+  CLEAR_ALL,
+  NO_CAR_FOUND
 } from "../const/actions";
 
 export default (state = { loading: false }, action) => {
   switch (action.type) {
+    case NO_CAR_FOUND:
+      return {
+        loading: false
+      };
     case FETCHING_CAR_INFO:
       return {
         ...state,

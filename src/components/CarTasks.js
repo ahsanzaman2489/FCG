@@ -17,7 +17,7 @@ import Input from "./formFields/Input";
 const useStyles = makeStyles(() => ({
   grid: {
     position: "relative",
-    minHeight: 305
+    minHeight: 370
   },
   absolute: {
     position: "absolute",
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
   },
   overFlow: {
     overflowY: "auto",
-    maxHeight: 245
+    maxHeight: 263
   }
 }));
 
@@ -56,7 +56,6 @@ const CarTasks = ({
     type: ""
   });
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => {
     setOpen(true);
   };
@@ -155,14 +154,10 @@ const CarTasks = ({
 
 CarTasks.propTypes = {
   taskDetails: PropTypes.instanceOf(Object).isRequired,
-  carId: PropTypes.string,
+  carId: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   addTaskAction: PropTypes.func.isRequired,
   updateTaskAction: PropTypes.func.isRequired
-};
-
-CarTasks.defaultProps = {
-  carId: null
 };
 
 export default reduxForm({

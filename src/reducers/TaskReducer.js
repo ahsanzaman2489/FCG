@@ -2,14 +2,18 @@ import {
   FETCHING_CAR_TASK,
   FETCH_CAR_TASK,
   FETCHING_CAR_TASK_DONE,
-  UPDATE_TASK
+  UPDATE_TASK,
+  NO_CAR_FOUND
 } from "../const/actions";
 
 export default (state = { loading: false, tasks: null }, action) => {
   switch (action.type) {
+    case NO_CAR_FOUND:
+      return {
+        loading: false
+      };
     case FETCHING_CAR_TASK:
       return {
-        ...state,
         loading: true
       };
     case FETCHING_CAR_TASK_DONE:

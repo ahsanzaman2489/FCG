@@ -10,7 +10,8 @@ import {
   FETCH_MAKE,
   FETCH_MODELS,
   FETCH_TRIM,
-  CLEAR_ALL
+  CLEAR_ALL,
+  NO_CAR_FOUND
 } from "../const/actions";
 import {
   carDetailQuery,
@@ -21,12 +22,17 @@ import {
 } from "../service/queries";
 
 export const fetchCarDetails = (id, cb) => async dispatch => {
+  dispatch({ type: NO_CAR_FOUND });
   dispatch({ type: FETCHING_CAR_DETAILS });
   try {
     const { response } = await request(carDetailQuery, { id });
     if (response) {
-      dispatch({ type: FETCH_CAR_DETAILS, payload: response.car });
-      if (cb && response.car !== null) cb(id);
+      if (response.car === null) {
+        dispatch({ type: NO_CAR_FOUND });
+      } else {
+        dispatch({ type: FETCH_CAR_DETAILS, payload: response.car });
+        if (cb) cb(id);
+      }
     }
   } catch (error) {
     toast(error, {

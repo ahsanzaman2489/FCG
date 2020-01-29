@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
   label: {
     background: "white",
     padding: "2px"
+  },
+  select: {
+    textTransform: "uppercase"
   }
 }));
 
@@ -68,6 +71,7 @@ const SelectComponent = ({
         {label}
       </InputLabel>
       <Select
+        className={classes.select}
         labelId="demo-simple-select-outlined-label"
         {...input}
         onChange={event => {
